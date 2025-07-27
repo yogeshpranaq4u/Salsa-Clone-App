@@ -19,7 +19,7 @@ interface CreatorApi {
     companion object {
         fun create(): CreatorApi {
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://mockapi.com/") // mock base
+                .baseUrl("https://mockapi.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpClient.Builder().addInterceptor { chain ->
                     val fakeJson = """
