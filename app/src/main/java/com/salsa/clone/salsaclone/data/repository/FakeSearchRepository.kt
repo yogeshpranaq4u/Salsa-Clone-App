@@ -6,7 +6,6 @@ import javax.inject.Inject
 
 class FakeSearchRepository @Inject constructor() : SearchRepository {
     override suspend fun getCategories(): List<Category> {
-        // For demo return fake data (simulate delay)
         delay(500)
         return FakeRepository.fakeCategories
     }
