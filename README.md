@@ -42,12 +42,6 @@ The full Salsa experience, recreated as an open-source Android app using the lat
 
 ---
 
-## Screenshots
-
-*(Add your app screenshots here for visual appeal)*
-
----
-
 ## Getting Started
 
 **Clone this repository:**
