@@ -1,15 +1,24 @@
+import android.content.Context
+import android.content.Intent
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,10 +37,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -47,7 +58,11 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.salsa.clone.salsaclone.R
 import com.salsa.clone.salsaclone.data.model.Creator
+import com.salsa.clone.salsaclone.ui.home.HomeState
 import com.salsa.clone.salsaclone.ui.home.HomeViewModel
+import com.salsa.clone.salsaclone.ui.streaming.LiveStreamActivity
+import com.salsa.clone.salsaclone.ui.streaming.StreamEndedActivity
+import com.salsa.clone.salsaclone.ui.theme.gradient
 import com.salsa.clone.salsaclone.utils.isInternetAvailable
 
 @Composable
@@ -60,7 +75,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
             .background(Color.Black)
             .fillMaxSize()
     ) {
-        TopBar()
+        TopBar(context,state)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (state.isLoading) {
@@ -91,15 +106,14 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 }
             }
         }
-//        BottomNavigationBar(selected = "For you")
     }
 }
 
 
 @Composable
-fun TopBar() {
+fun TopBar(context: Context, state: HomeState) {
     val customFont = FontFamily(Font(R.font.robotoregular))
-    Box(modifier = Modifier.padding(top = 25.dp)) {
+    Box(modifier = Modifier.padding(top = 15.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -136,33 +150,48 @@ fun TopBar() {
             }
 
             GradientButtonWithIcon(
-                onClick = { /* Go Live action */ },
+                onClick = {
+//                    streamClassNaivgation(context,state.creators.get(0))
+                    val intent = Intent(context, LiveStreamActivity::class.java)
+                    context.startActivity(intent)
+                },
                 text = "Go Live",
                 fontFamily = customFont,
-                iconResId = R.drawable.go_live_icon
+                iconResId = R.drawable.go_live_icon,
+                shake = true
             )
         }
     }
 }
 
 @Composable
-fun GradientButtonWithIcon(onClick: () -> Unit, text: String, fontFamily: FontFamily, iconResId: Int) {
-    val gradient = Brush.horizontalGradient(
-        colors = listOf(Color(0xFFDF3818), Color(0xFFE75B0F))
-    )
+fun GradientButtonWithIcon(onClick: () -> Unit, text: String, fontFamily: FontFamily, iconResId: Int, shake: Boolean = false) {
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val offsetX by if (shake) {
+        infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 8f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 1000, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
+    } else {
+        remember { mutableStateOf(0f) }
+    }
 
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-        contentPadding = PaddingValues(0.dp),
-        shape = RoundedCornerShape(20.dp),
         modifier = Modifier
+            .height(30.dp)
             .width(110.dp)
-            .height(20.dp)
+            .offset(x = offsetX.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(gradient)
+            .background(gradient),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+        contentPadding = PaddingValues(vertical = 0.dp),
     ) {
-
             Row(
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 0.dp),
@@ -189,6 +218,7 @@ fun GradientButtonWithIcon(onClick: () -> Unit, text: String, fontFamily: FontFa
 
 @Composable
 fun CreatorCard(creator: Creator) {
+    var context = LocalContext.current
     Card(
         modifier = Modifier
             .padding(horizontal = 4.dp, vertical = 4.dp)
@@ -200,7 +230,9 @@ fun CreatorCard(creator: Creator) {
                 model = creator.thumbImage,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().height(240.dp)
+                modifier = Modifier.fillMaxWidth().height(240.dp).clickable {
+                    streamClassNaivgation(context, creator)
+                }
             )
 
             Box(
@@ -383,5 +415,13 @@ fun CreatorCardShimmer() {
             }
         }
     }
+}
+
+fun streamClassNaivgation(context: Context, creator: Creator){
+    val intent = Intent(context, StreamEndedActivity::class.java)
+    intent.putExtra("creator_url", creator.thumbImage)
+    intent.putExtra("creator_name", creator.name)
+    intent.putExtra("creator_view", creator.views)
+    context.startActivity(intent)
 }
 

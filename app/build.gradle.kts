@@ -76,4 +76,13 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.accompanist.shimmer)
+    implementation(libs.accompanist.systemUI)
+    implementation(libs.accompanist.permission)
+    implementation(libs.accompanist.navigation.animation)
+
+    implementation(libs.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
+
+
 }

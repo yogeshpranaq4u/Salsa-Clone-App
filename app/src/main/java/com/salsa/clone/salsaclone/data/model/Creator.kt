@@ -8,3 +8,9 @@ data class Creator(
     val views: Int,
     val coins: Int
 )
+
+data class Category(
+    val id: Int,
+    val title: String,
+    val creators: List<Creator>
+)
