@@ -84,18 +84,18 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
             }
         } else {
             if (!isInternetAvailable(context = context)) {
-                // Show shimmer effect when no internet
+                
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
                 ) {
-                    // Show a fixed number of shimmer placeholders, e.g. 6
+                  
                     items(6) {
                         CreatorCardShimmer()
                     }
                 }
             } else {
-                // Normal content when internet available
+         
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
