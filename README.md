@@ -183,7 +183,7 @@ Core dependencies used in app.
 
 Watch the demo videos showcasing key features of the Salsa Clone app like GIfs to watch full videos:
 
-- [![Demo Video 1](demo1.gif)](https://vimeo.com/1104909914)  - [![Demo Video 2](demo2.gif)](https://vimeo.com/1104909931)  - [![Demo Video 3](demo3.gif)](https://vimeo.com/1104909963)  - [![Demo Video 4](demo4.gif)](https://vimeo.com/1104909982)  
+- [![Demo Video 1](demo1.gif)](https://vimeo.com/1104909914)  - [![Demo Video 2](demo2.gif)](https://vimeo.com/1104909931)  - [![Demo Video 3](demo3.gif)](https://vimeo.com/1104909963)  - [![Demo Video 4](demo4.gif)](https://vimeo.com/1104909982)  - [![Animation Main Screen](mainscreen.gif)] - [![Animation Main Screen](searchscreen.gif)] - [![Animation Main Screen](profilescreen.gif)]
   
 
 ---
